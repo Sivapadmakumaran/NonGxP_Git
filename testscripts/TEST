@@ -1,0 +1,685 @@
+Public tdc
+Public overAllSummaryFile
+public reportFiles
+Public resultsPath
+    public totalTestsG
+    public passCountG
+    public failCountG
+    public notCompletedG
+Public noRun
+    public othersG
+public strHostName
+public strHostName1
+public strRunStartTime
+public strRunEndTime
+Public Totalduration
+public firstTime
+public totalVMSUsed
+FindTestResults()
+Public Sub FindTestResults()
+totalVMSUsed=0
+Totalduration=0
+    Dim sDomain
+    Dim sProject
+    Dim sPassword
+    Dim folderPath
+    Dim runName
+    Dim sURL
+   'Dim resultsPath
+    URL_details = "http://fcqcprod02:8080/qcbin/"
+    UserName = ""
+    PWord = ""
+    Domain = "MOBILE_WEB_AND_PORTALS"
+    Project = "GNet_Stabilisation"
+    'Initial Value pls don't change it
+    totalTests=0
+    passCount=0
+    failCount=0
+    notCompleted=0
+    othersG=0
+firstTime=True
+noRun=0
+notCompletedG=0
+  totalTestsG=0
+    passCountG=0
+    failCountG=0
+noRun=0
+dim vmsusedtestset
+dim vmsused
+ vmsused=""
+vmsusedtestset=""
+    sNo = 1
+
+    folderPath = "Root\DryRun\"
+    'folderPath = InputBox("Please enter test set path like 'Root\TFS_Demo'")
+    Set oShell = CreateObject("WScript.Shell")
+strHomeFolder = oShell.ExpandEnvironmentStrings("%USERPROFILE%")
+    resultsPath = strHomeFolder+"\GCAP\ALM_Integration\utilityRun"
+    
+    
+    'QC Connection
+    Set tdc = CreateObject("TDAPIOLE80.TDConnection")
+    
+    tdc.InitConnectionEx URL_details
+    'MsgBox "Connected to server"
+    tdc.Login UserName, PWord
+    'MsgBox wsPara.Range("B5")
+    tdc.Connect Domain, Project
+        
+    If (tdc.Connected <> True) Then
+    MsgBox "qc project failed to connect to" & Project
+    WScript.Quit
+    End If
+    
+    'To Read the test set in the qc folder
+    Call fnReadTestSet(tdc, folderPath)
+    
+    'To read the folder/sub folder in qc
+    Call fnReadFolder(tdc, folderPath)
+    
+    'Set nothing to the created objects
+    Set tdc = Nothing
+    Dim mailto
+    Dim subject
+Dim body
+Dim Browser
+Browser="chrome"
+mailto=""
+subject="Test Execution Summary"
+'body=readPropertiesFile("mailBody")
+
+arrnames = Split(strHostName, ",")
+
+For intLoop = 0 To UBound(arrnames)
+
+        If InStr(ucase(vmsused), ucase(arrnames(intLoop))) = 0 Then
+
+            vmsused = arrnames(intLoop) & ",</br>" & vmsused
+	'totalVMSUsed=totalVMSUsed+1
+
+    End If
+
+Next
+dim reportsUploadpath
+if InStr("false","false") = 1 Then
+	reportsUploadpath="<p>Reports can be found at :"&"Test"&"</p>"
+Else
+ reportsUploadpath=""
+END IF
+
+body="<html><head><style>table, th, td {border: 1px solid black;border-collapse: collapse;}</style></head><body><div><div>Hello Team,</div></br><div></div>GNET test execution"&_
+" is completed. Below is the quick tabular representation of execution status : </div></br>"&_
+"<table><tr ><td >Executed by</td><td>"&UserName&"</td></tr><tr ><td>Environment</td><td>"&"Test"&"</td></tr><tr><td >Browser</td><td>"&Browser&"</td></tr>"&_
+"<tr><td>Executed on </td><td>"&Date&"</td></tr><tr><td >Total TC's #</td><td>"&totalTestsG&"</td></tr><tr><td >Passed #</td><td>"&passCountG&"</td></tr>"&_
+"<tr><td >Failed #</td><td>"&failCountG&"</td></tr><tr><td>Not Completed </td><td>"&notCompletedG&"</td></tr><tr>"&_
+"<td>No Run</td><td>"&noRun&"</td></tr><tr><td>Start Time</td><td>"&strRunStartTime&"</td></tr><tr><td>End Time</td><td>"&strRunEndTime&"</td></tr>"&_
+"<tr><td>Total Duration</td><td>"&calculateTime(Totalduration)&"</td></tr></table></br><p>ALM test set Path       : "&folderPath&"</p>"&reportsUploadpath&"<p>VDIs used :</p>"&vmsused&"</p> </br><div>Thanks,</div><div>QAE Automation</div></body></html>"
+  
+       Call SendMail(mailto,subject,body,reportFiles)    
+    
+  
+    'MsgBox "Completed"
+End Sub
+
+Sub fnReadTestSet(tdc, folderPath)
+
+    Set TSetFact = tdc.TestSetFactory
+    Set tsTreeMgr = tdc.TestSetTreeManager
+    Set tsFolder = tsTreeMgr.NodeByPath(folderPath)
+    'To find the test set in the foler path
+    Set tsTestSetFac = tsFolder.TestSetFactory
+    Set tsTestSetList = tsTestSetFac.NewList("")
+    strTestSetCount = tsTestSetList.Count
+    strHostName1=""
+    
+    If strTestSetCount > 0 Then
+        For Each tsTestSet In tsTestSetList
+        sNo=1
+         Set objFso1 = CreateObject("Scripting.FileSystemObject")
+         overAllSummaryFile = resultsPath & "\"&tsTestSet.Name&".html"
+Dim strTestResults
+strTestResults=""
+totalTests=0
+passCount=0
+failCount=0
+    
+'                            Set objMyFile1 = objFso1.OpenTextFile(overAllSummaryFile, 8)
+'                            Dim strTestResults1
+'                            strTestResults1 = "<tr class='content' style='color:red'><td>"&tsTestSet.Name&"</td></tr>"
+'                           objMyFile1.WriteLine (strTestResults1)
+'                           objMyFile1.Close
+            'To find the tests in the test set
+            Set tsTestFac = tsTestSet.TSTestFactory
+            Set tsTestList = tsTestFac.NewList("")
+            strTestListCount = tsTestList.Count
+            
+            If strTestListCount > 0 Then
+                For Each tsTest In tsTestList
+                    'To find the run in the tests
+                    Set tsRunFac = tsTest.RunFactory
+                    Set tsRunList = tsRunFac.NewList("")
+					strRunListCount = tsRunList.Count
+                                          dim testduration
+testduration=0
+dim testvm
+testvm=""
+					If strRunListCount > 0 Then
+						If strRunListCount <> 1 Then
+							 strRunID = 0
+							For Each tsRun In tsRunList
+
+Set tsStepFac = tsRun.StepFactory
+                                Set tsStepList = tsStepFac.NewList("")
+                                strStepListCount = tsStepList.Count
+								strTempRunID = tsRun.ID
+							'msgbox "strTempRunID:"&strTempRunID&" strRunID:"&strRunID	
+								If strTempRunID > strRunID Then
+									strRunID = strTempRunID
+									strTestName = tsTest.TestName
+testduration=tsRun.Field("RN_Duration")
+testvm=tsRun.Field("RN_HOST")
+									strTestStatus = tsRun.Field("RN_STATUS")
+	
+                                					For intLoop = 1 To strStepListCount
+                                    						Set tsCurrentStep = tsStepList.Item(intLoop)
+                                        					strStepName = tsCurrentStep.Name
+If firstTime= true Then
+    strRunStartTime = tsCurrentStep.Field("ST_EXECUTION_TIME")
+   
+End if
+'strRunEndTime = tsCurrentStep.Field("ST_EXECUTION_TIME")+testduration
+strRunEndTime = DateAdd("n",testduration,tsCurrentStep.Field("ST_EXECUTION_TIME"))
+
+                                    					
+                                					Next
+
+								End If
+
+							Next
+ firstTime=False
+If Len(strHostName) = 0 then 
+		strHostName = testvm
+	Else
+		strHostName = strHostName&","&testvm
+	End If
+If Len(strHostName1) = 0 then 
+		strHostName1 = testvm
+	Else
+		strHostName1 = strHostName1&","&testvm
+	End If
+Totalduration=Totalduration+testduration
+						Else
+							For Each tsRun In tsRunList
+				Set tsStepFac = tsRun.StepFactory
+                                Set tsStepList = tsStepFac.NewList("")
+                                strStepListCount = tsStepList.Count
+								strTestName = tsTest.TestName
+								strTestStatus = tsRun.Field("RN_STATUS")
+									If Len(strHostName) = 0 then 
+		strHostName = tsRun.Field("RN_HOST")
+	Else
+		strHostName = strHostName&","&tsRun.Field("RN_HOST")
+	End If
+If Len(strHostName1) = 0 then 
+		strHostName1 = tsRun.Field("RN_HOST")
+	Else
+		strHostName1 = strHostName1&","&tsRun.Field("RN_HOST")
+	End If
+                                					For intLoop = 1 To strStepListCount
+                                    						Set tsCurrentStep = tsStepList.Item(intLoop)
+                                        					strStepName = tsCurrentStep.Name
+
+If firstTime= true Then
+    strRunStartTime = tsCurrentStep.Field("ST_EXECUTION_TIME")
+    firstTime=False
+End if
+'strRunEndTime = tsCurrentStep.Field("ST_EXECUTION_TIME")+tsRun.Field("RN_Duration")
+strRunEndTime =DateAdd("n",tsRun.Field("RN_Duration"),tsCurrentStep.Field("ST_EXECUTION_TIME"))
+                                					Next
+							Next
+						End If
+					Else
+						strTestName = tsTest.TestName
+						strTestStatus = "No Run"
+					End If
+					If StrComp(strTestStatus,"Passed",1)=0 Then
+						strTestStatus="<td style='color:green'>"&strTestStatus&"</td>"
+					ElseIf StrComp(strTestStatus,"Failed",1)=0 Then
+						strTestStatus="<td style='color:red'>"&strTestStatus&"</td>"
+					Else
+						strTestStatus="<td >"&strTestStatus&"</td>"
+					End IF
+					strTestResults = strTestResults& "<tr class='content' style='font-size:10px'><td>" & sNo & "</td><td>" & strTestName & "</td>" & strTestStatus & "</tr>"
+					'&RunF.Field("RN_Duration")
+					
+					sNo = sNo + 1
+					totalTests=totalTests+1
+					totalTestsG=totalTestsG+1
+					'msgbox strTestStatus
+					If Instr(strTestStatus,"Passed") then
+			                	passCount=passCount+1
+						passCountG=passCountG+1
+					 elseIf Instr(strTestStatus,"Failed") then
+						failCount=failCount+1
+						failCountG=failCountG+1
+					elseIf Instr(strTestStatus,"No Run") then
+						noRun=noRun+1
+					else
+						notCompletedG=notCompletedG+1	
+					End If
+
+                
+                Next
+            End If
+
+Totalduration=Replace(DateDiff("n",strRunStartTime,strRunEndTime),"-","")
+
+'strRunEndTime=DateAdd("n",Totalduration,strRunStartTime)
+if len(strRunEndTime) >20 then
+	strRunEndTime=Mid(strRunEndTime,11,len(strRunEndTime))
+End if
+arrnames1 = Split(strHostName1, ",")
+totalVMSUsed=0
+For intLoop = 0 To UBound(arrnames1)
+
+        If InStr( ucase(vmsusedtestset), ucase(arrnames1(intLoop))) = 0 Then
+ 	vmsusedtestset= arrnames1(intLoop) & ",</br>" & vmsusedtestset
+          
+	totalVMSUsed=totalVMSUsed+1
+
+    End If
+
+
+Next
+
+Call fnHTMLCreation(overAllSummaryFile, URL_details, UserName, PWord, Domain, Project, folderPath)
+             Set objFso = CreateObject("Scripting.FileSystemObject")
+    Set objMyFile = objFso.OpenTextFile(overAllSummaryFile, 8)
+    objMyFile.WriteLine ("</table><table><tr ><td style='border-left:1px solid;width:20%;;font-size:10px'>Total Tests:"&totalTests&"</td><td style='border-left:1px solid;width:54%;font-size:10px'> Passed :"&passCount&"</td><td style='font-size:10px'>Failed :"&failCount&"</td></tr></table><table style='text-align: Left; ' id='header'>" & _
+                                   "<thead>" & _                                  
+                                 "<tr class='heading'><th style='width:20%;font-size:10px'>S.No</th><th style='width:54%;font-size:10px'>Test Name</th><th style='font-size:10px'>Status</th></tr>"&strTestResults&"</table> </body></html>")
+    objMyFile.Close
+
+    Call fnPDFConversion(overAllSummaryFile, resultsPath,tsTestSet.Name)
+        Next
+    End If
+        
+    'Set nothing to the created objects
+    Set TSetFact = Nothing
+    Set tsTreeMgr = Nothing
+    Set tsFolder = Nothing
+    Set tsTestSetFac = Nothing
+    Set tsTestSetList = Nothing
+    Set objFso = Nothing
+    Set objMyFile = Nothing
+End Sub
+
+Sub fnReadFolder(tdc, folderPath)
+    Set TSetFact = tdc.TestSetFactory
+    Set tsTreeMgr = tdc.TestSetTreeManager
+    Set tsFolder = tsTreeMgr.NodeByPath(folderPath)
+        
+    'To find the sub folder in the foler path
+    Set tsSubFolder = tsFolder.SubNodes
+    strSubFolderCount = tsSubFolder.Count
+    i = 0
+    
+    'Count of folder/subfolder is greater than 0
+    If strSubFolderCount > 0 Then
+        For Each tsFolder In tsSubFolder
+            i = i + 1
+            strTempFolderPath = folderPath & i
+            strTempFolderPath = folderPath & "\" & tsFolder.Name
+            Call fnReadTestSet(tdc, strTempFolderPath)
+            Call fnReadFolder(tdc, strTempFolderPath)
+        Next
+    End If
+    
+    'Set nothing to the created objects
+    Set TSetFact = Nothing
+    Set tsTreeMgr = Nothing
+    Set tsFolder = Nothing
+    Set tsSubFolder = Nothing
+End Sub
+
+
+
+'for HTML report creation
+Sub fnHTMLCreation(overAllSummaryFile, URL_details, UserName, PWord, Domain, Project, folderPath)
+    Dim objFso
+    Dim objMyFile
+    Set objFso = CreateObject("Scripting.FileSystemObject")
+    Set objMyFile = objFso.CreateTextFile(overAllSummaryFile, True)
+    objMyFile.Close
+    
+    'Initial Value pls don't change it
+    intLoop = 1
+    strTestSetName = ""
+    Set objSysInfo = CreateObject( "WinNTSystemInfo" )
+    strComputerName = objSysInfo.ComputerName
+    Set objMyFile = objFso.OpenTextFile(overAllSummaryFile, 8)  ' 8 - Append Mode
+    Dim strTestLogHeader
+    strTestLogHeader = "<!DOCTYPE html><html><head><meta charset='UTF-8'><title>TFS Automation Execution Results</title>" & _
+	GetThemeCss() & _
+    GetJavascriptFunctions() & _
+    "<table id='header' style='text-align: left;font-size:10px'><tr ><td style='width:20%'>Date & Time </td><td style='width:41%'>" & Now &_ 
+"</td><td style='width:25%'>No of VM's</td><td style='width:14%'>"&totalVMSUsed&"</td></tr><tr ><td style='border:none;border-left:1px solid;border-bottom:1px solid;'>Test Set Path  </td><td style='border:none;border-left:1px solid;border-bottom:1px solid'>" & folderPath & "</td></tr></table>" & _
+                            "</head>" & _
+                             "<body style='border: 1px solid #000000;'>"  
+                                  
+    objMyFile.WriteLine (strTestLogHeader)
+    objMyFile.Close
+End Sub
+
+'Get test set names
+Private Function GetTestSetName(URL_details, UserName, PWord, Domain, Project, folderPath, intLoop, strTestSetName)
+    'QC Connection
+    Set tdc = CreateObject("TDAPIOLE80.TDConnection")
+    
+    tdc.InitConnectionEx URL_details
+    'MsgBox "Connected to server"
+    tdc.Login UserName, PWord
+    'MsgBox wsPara.Range("B5")
+    tdc.Connect Domain, Project
+        
+    If (tdc.Connected <> True) Then
+    MsgBox "qc project failed to connect to" & Project
+    WScript.Quit
+    End If
+           
+    Set TSetFact = tdc.TestSetFactory
+    Set tsTreeMgr = tdc.TestSetTreeManager
+    Set tsFolder = tsTreeMgr.NodeByPath(folderPath)
+    'To find the test set in the foler path
+    Set tsTestSetFac = tsFolder.TestSetFactory
+    Set tsTestSetList = tsTestSetFac.NewList("")
+    strTestSetCount = tsTestSetList.Count
+    
+    If strTestSetCount > 0 Then
+        For Each tsTestSet In tsTestSetList
+            'To get the Test set names
+            If intLoop = 1 Then
+                strTestSetName = tsTestSet.Name
+                intLoop = intLoop + 1
+            Else
+                strTestSetName = strTestSetName & ", " & tsTestSet.Name
+            End If
+        Next
+    End If
+    
+    Set tsFolder = tsTreeMgr.NodeByPath(folderPath)
+    Set tsSubFolder = tsFolder.SubNodes
+    strSubFolderCount = tsSubFolder.Count
+    i = 0
+    
+    If strSubFolderCount > 0 Then
+        For Each tsFolder In tsSubFolder
+            i = i + 1
+            strTempFolderPath = folderPath & i
+            strTempFolderPath = folderPath & "\" & tsFolder.Name
+            Call GetTestSetName(URL_details, UserName, PWord, Domain, Project, strTempFolderPath, intLoop, strTestSetName)
+        Next
+    End If
+    
+    GetTestSetName = strTestSetName
+    'Set nothing to the created objects
+    Set TSetFact = Nothing
+    Set tsTreeMgr = Nothing
+    Set tsFolder = Nothing
+    Set tsSubFolder = Nothing
+    Set tsTestSetFac = Nothing
+    Set tsTestSetList = Nothing
+    Set tdc = Nothing
+End Function
+
+'for css
+Private Function GetThemeCss()
+        Dim strThemeCss
+        strThemeCss = "<style type='text/css'>body{font-family: Verdana, Geneva, sans-serif;" & _
+                        "text-align: center;" & _
+                        "border: 1px solid #000000;" & _
+                        "}small {font-size: 0.7em;}" & _
+                      "table {border: 1px solid #000000;width: 100%;text-align: left;" & _
+                        "border-collapse: collapse;" & _
+                        "border-spacing: 1px;" & _
+                        "width: 100%;" & _
+                        "margin-left: auto;" & _
+                        "margin-right: auto;}"
+            strThemeCss = strThemeCss & "tr.heading {" & _
+                            "" & _
+                            "border: 1px solid #000000;" & _
+                            "font-weight: bold;text-align: center;}" & _
+                           "tr.subheading {" & _
+                            "border: 1px solid #000000;" & _
+                            "color: #000000 " & ";" & _
+                            "font-weight: bold;" & _
+                            "font-size: 0.9em;" & _
+                            "text-align: justify;}"
+               strThemeCss = strThemeCss & "tr.section{" & _
+                            "border: 1px solid #000000;color:#000000;cursor: pointer;" & _
+                            "font-weight: bold;font-size: 0.9em;text-align: justify;}" & _
+                           "tr.subsection {cursor: pointer;}" & _
+                           "tr.content {color:#000000;font-size: 0.9em;" & _
+                            "display: table-row;border: 1px solid #000000;}" & _
+                           "td {padding: 4px;border: 1px solid #000000;text-align:inherit;" & _
+                            "word-wrap: break-word;" & _
+                            "max-width: 450px;}" & _
+                           "th {padding: 4px;border: 1px solid #000000;text-align:inherit;" & _
+                            "word-break: break-all;" & _
+                            "max-width: 450px;}td.justified {" & _
+                            "text-align: Left;" & _
+                           "}td.pass {font-weight: bold;color: green;}"
+                strThemeCss = strThemeCss & "td.fail {font-weight: bold;color: red;}" & _
+                           "td.screenshot {font-weight: bold;color: navy;}" & _
+                           "td.done {font-weight: bold;color: black;}" & _
+                            "td.debug {" & _
+                            "font-weight: bold;" & _
+                            "color: blue;" & _
+                           "}td.warning {font-weight: bold;color: orange;}</style>"
+        
+        GetThemeCss = strThemeCss
+End Function
+
+'Get javascript
+Private Function GetJavascriptFunctions()
+    Dim strJavascriptFunctions
+    strJavascriptFunctions = "<script>function toggleMenu(objID) {if (!document.getElementById) return;" & _
+                                "var ob = document.getElementById(objID).style;" & _
+                                "if(ob.display === 'none') {try {" & _
+                                      "ob.display='table-row-group';" & _
+                                     "} catch(ex) {ob.display='block';}" & _
+                                    "}else {" & _
+                                     "ob.display='none';" & _
+                                    "}}function toggleSubMenu(objId) {" & _
+                                    "for(i=1; i<10000; i++) {" & _
+                                     "var ob = document.getElementById(objId.concat(i));" & _
+                                     "if(ob === null) {" & _
+                                      "break;}" & _
+                                     "if(ob.style.display === 'none') {" & _
+                                      "try { " & _
+                                       "ob.style.display='table-row';" & _
+                                      "} catch(ex) {" & _
+                                       "ob.style.display='block';" & _
+                                      "}" & _
+                                     "}" & _
+                                     "else {" & _
+                                      "ob.style.display='none';" & _
+                                     "}" & _
+                                    "}" & _
+                                   "}" & _
+                                  "</script>"
+    
+    GetJavascriptFunctions = strJavascriptFunctions
+End Function
+
+
+'######################
+'Function to read properties file
+Public Function readPropertiesFile(fieldName)
+	Dim sFspec
+	Set oShell = CreateObject("WScript.Shell")
+strHomeFolder = oShell.ExpandEnvironmentStrings("%USERPROFILE%")
+	sFSpec = strHomeFolder+"\GCAP\ALM_Integration\Global Settings.properties"
+	Set objFileToRead = CreateObject("Scripting.FileSystemObject").OpenTextFile(sFSpec,1)
+	Dim strLine
+	Dim fieldValue
+	do while not objFileToRead.AtEndOfStream
+	     strLine = objFileToRead.ReadLine()
+	     if InStr(strLine,fieldName&"=") then
+	      fieldValue = Split(strLine,"=")
+	     End IF
+    	loop
+	    readPropertiesFile=fieldValue(1)
+End Function
+
+Function SendMail(SendTo, Subject, Body, Attachment)
+
+    Set ol=CreateObject("Outlook.Application")
+    Set Mail=ol.CreateItem(0)
+
+    Mail.to=SendTo
+    Mail.Subject=Subject
+    'Mail.Body=Body
+  Mail.HTMLBody=Body
+
+a=Split(Attachment,";")
+for each x in a
+
+    If (Attachment <> "") Then
+        Mail.Attachments.Add(x)
+    End If
+Next
+    Mail.Send
+
+    'ol.Quit
+    Set Mail = Nothing
+    Set ol = Nothing
+End Function
+Function calculateTime(SecondsDifference)
+Dim hours, minutes, seconds
+
+  ' calculates whole hours (like a div operator)
+  hours = SecondsDifference \ 60
+
+  ' calculates the remaining number of seconds
+  minutes  = SecondsDifference Mod 60
+
+  ' calculates the whole number of minutes in the remaining number of seconds
+  'minutes = SecondsDifference \ 60
+
+  ' calculates the remaining number of seconds after taking the number of minutes
+  seconds = 0
+'hms = TimeSpan.FromSeconds(SecondsDifference)
+'h = hms.Hours.ToString
+'m = hms.Minutes.ToString
+'s = hms.Seconds.ToString
+'Hours=Hours.ToString.PadLeft(2, "0"c)
+'Minutes=Minutes.ToString.PadLeft(2, "0"c)
+'Seconds=Seconds.ToString.PadLeft(2, "0"c)
+
+calculateTime= hours & ":" & minutes & ":" & seconds
+End Function
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+'for PDF Conversion
+
+
+Sub fnPDFConversion(overAllSummaryFile, resultsPath,fileName)
+
+call Kill_32BitProcess("Winword.exe")
+
+Dim filesys
+
+Set oShell = CreateObject("WScript.Shell")
+strHomeFolder = oShell.ExpandEnvironmentStrings("%USERPROFILE%")
+
+set filesys=CreateObject("Scripting.FileSystemObject")
+dim doccopy
+
+doccopy=strHomeFolder+"\GCAP\ALM_Integration\utilityRun\summary1.docx"
+
+If filesys.FileExists(strHomeFolder+"\GCAP\ALM_Integration\utilityRun\summary.docx") Then
+
+
+	filesys.CopyFile strHomeFolder+"\GCAP\ALM_Integration\utilityRun\summary.docx",doccopy 
+	
+End If
+
+	
+Set objWord = CreateObject( "Word.Application" )
+          objWord.Visible = False
+
+
+   Set objDocument = objWord.Documents.Open( resultsPath &"\"& fileName&".html",ConfirmConversions=True, Format=wdOpenFormatAuto)
+          Set objSelection= objWord.Selection
+          Dim strsrcpgnumber
+             strsrcpgnumber=objDocument.ComputeStatistics(2)
+
+
+  Set objWord1 = CreateObject("Word.Application")
+         objWord1.visible=False
+          Set objDocument1 = objWord.Documents.open(doccopy)
+         Set objSelection1= objWord.Selection
+         
+         objSelection.wholestory
+         objSelection.copy
+         objSelection1.PasteAndFormat(wdPasteDefault)
+
+  objDocument1.SaveAs resultsPath&"\"&fileName&"_RegressionExecution.pdf",17
+
+	If (reportFiles <> "") Then
+		reportFiles=reportFiles&";"&resultsPath&"\"&fileName&"_RegressionExecution.pdf"
+	else
+		reportFiles=resultsPath&"\"&fileName&"_RegressionExecution.pdf"
+	End if
+
+   set objword=Nothing
+    
+    Set objWord1 = Nothing
+call Kill_32BitProcess("Winword.exe")
+End Sub
+
+
+Function Kill_32BitProcess(ByVal strProcessToKill)    
+    ' Variable Declaration
+    Dim strComputer, objWMIService, colProcess, intCounter, objProcess
+    Dim colProcess1
+    strComputer = "."
+    'strProcessToKill = "iexplore.exe" 
+    'wait(1)
+    Set objWMIService = GetObject("winmgmts:" & "{impersonationLevel=impersonate}!\\" & strComputer & "\root\cimv2") 
+    Set colProcess = objWMIService.ExecQuery ("Select * from Win32_Process Where Name = '" & strProcessToKill & "'")
+    
+    intCounter = 0
+    For Each objProcess in colProcess
+        'wait(1)
+        Set colProcess1 = objWMIService.ExecQuery ("Select * from Win32_Process Where Name = '" & strProcessToKill & "'")                   
+            If colProcess1.count = 0 Then
+    Exit For
+            Else
+                objProcess.Terminate()
+            End If
+    'wait(1)
+    Next 
+End Function
+

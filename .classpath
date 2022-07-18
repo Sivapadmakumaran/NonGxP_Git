@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<classpath>
+	<classpathentry kind="src" path=""/>
+	<classpathentry kind="lib" path="supportlibraries/External_Jars/bsh-1.3.0.jar"/>
+	<classpathentry kind="lib" path="supportlibraries/External_Jars/imageClient.jar"/>
+	<classpathentry kind="lib" path="supportlibraries/External_Jars/itextpdf-5.4.2.jar"/>
+	<classpathentry kind="lib" path="supportlibraries/External_Jars/java-client-4.1.2.jar"/>
+	<classpathentry kind="lib" path="supportlibraries/External_Jars/javax.ws.rs.jar"/>
+	<classpathentry kind="lib" path="supportlibraries/External_Jars/jersey-client.jar"/>
+	<classpathentry kind="lib" path="supportlibraries/External_Jars/jersey-core-1.19.1.jar"/>
+	<classpathentry kind="lib" path="supportlibraries/External_Jars/json-20151123.jar"/>
+	<classpathentry kind="lib" path="supportlibraries/External_Jars/junit-4.4.jar"/>
+	<classpathentry kind="lib" path="supportlibraries/External_Jars/mobile-webdriver.jar"/>
+	<classpathentry kind="lib" path="supportlibraries/External_Jars/Password Decrypter.jar"/>
+	<classpathentry kind="lib" path="supportlibraries/External_Jars/poi-3.14-20160307.jar"/>
+	<classpathentry kind="lib" path="supportlibraries/External_Jars/poi-ooxml-3.14-20160307.jar"/>
+	<classpathentry kind="lib" path="supportlibraries/External_Jars/poi-ooxml-schemas-3.14-20160307.jar"/>
+	<classpathentry kind="lib" path="supportlibraries/External_Jars/selenium-server-standalone-3.0.1.jar"/>
+	<classpathentry kind="lib" path="supportlibraries/External_Jars/testng-6.0.jar"/>
+	<classpathentry kind="lib" path="supportlibraries/External_Jars/ws-commons-util-1.0.2.jar"/>
+	<classpathentry kind="lib" path="supportlibraries/External_Jars/xmlbeans-2.6.0.jar"/>
+	<classpathentry kind="lib" path="supportlibraries/External_Jars/xmlrpc-client-3.1.2.jar"/>
+	<classpathentry kind="lib" path="supportlibraries/External_Jars/xmlrpc-common-3.1.2.jar"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
+	<classpathentry kind="lib" path="supportlibraries/External_Jars/javax.mail.jar"/>
+	<classpathentry kind="lib" path="supportlibraries/External_Jars/jsoup-1.13.1.jar"/>
+	<classpathentry kind="lib" path="supportlibraries/External_Jars/automation-0.0.13.jar"/>
+	<classpathentry kind="output" path=""/>
+</classpath>

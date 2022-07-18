@@ -1,0 +1,247 @@
+package uimap;
+
+import org.openqa.selenium.By;
+
+/**
+ * UI Map for Common Objects
+ */
+public class Common {
+
+	public By textbox,readonlyTextbox,textarea,dialogTextbox;
+	public By navigationbutton,button,dialogButton,unlockButton,headerButton;
+	public By dropdown,menu,select,combobox,comboLookup,dialogComboListItem;
+	public By mailframe,mailTextbox;
+	public By tableLink,tableLink2;
+	public By tab;
+	public By checkbox;
+	public By link;
+	public By datePicker;
+	public By expandView;
+	public By surveyChoice,SP_Textarea,SP_Button,translateSearchLink;
+	public By readonlyFiled,addRemoveButton,groupmenberTextbox,escportaltab,escPoratlBtn,CommentsButton,TabButton,dialogRadioButton,searchdropdown,dialogTextArea;
+	public By dropDownSelect,dropDownClick,linkIcon,dialogTextArea,dialogBtn,linkText,dropDownSelectValue,search,multiSelect,arrowBtn;
+	public By imgIcon,glideLookupSearch,lookupSearchBtn,notifyError,tableHeaderSearch,cardRows,readonlyDropdownValues;
+	public By cardTableRows,cardDate,showEmailLink,hideEmailLink,preFilledText,previewIcon,tablelinkText,dialogRadioButton,textContentBodyFrame;
+	public By textContentBody,comments,userComments,cardText,tableText,navbarTitle,dropdownWithoutName,tabText,tabNavButton,titleCard,calenderClick;
+	public By textBoxInput,dialogComboBox,getNumItem,navLink,attachmentLink,breadcrumbLink,tableAttachLink,dialogCheckBox,comboTextBox;
+	public Common(String strLabel) {
+		
+		//textbox=By.xpath("//*[text()='"+strLabel+"']//ancestor-or-self::*[contains(@id,'element') or contains(@class,'search')]//following-sibling::div[contains(@class,'input') or @style]//input[(@type='search' or @type='text' or contains(@id,'text')) and not(@type='hidden')]");
+	//textbox=By.xpath("//*[text()='"+strLabel+"']//ancestor-or-self::*[contains(@id,'element') or contains(@class,'search')]//descendant::div[contains(@class,'input') or @style]//input[(@type='search' or @type='text' or contains(@id,'text')) and not(@type='hidden')]");
+		textbox=By.xpath("//*[text()='"+strLabel+"' and (contains(@class,'label-text') or contains(@class,'list_search_title '))]//ancestor-or-self::*[contains(@id,'element') or (contains(@id,'search'))]//descendant::div[contains(@class,'input') or @style]//input[not(@type='hidden')]");	
+		textarea=By.xpath("//*[text()='"+strLabel+"']//ancestor-or-self::*[contains(@id,'input') and @aria-hidden='false' or contains(@id,'label') and @data-type='label' or contains(@data-type,'input')and not(contains(@style,'display:none;'))]//following-sibling::*[contains(@class,'input') or contains(@class,'field')]//textarea");
+		navigationbutton = By.xpath("//*[text()='" + strLabel + "']//ancestor-or-self::a[@role='button']");
+		searchdropdown=By.xpath("//*[text()='" + strLabel + "']//ancestor-or-self::*[contains(@class,'modal-header') or contains(@class,'section_header')]//following-sibling::*[contains(@class,'modal-body') or contains(@class,'group')]//descendant::*[contains(@class,'select') and (contains(@id,'auto') or contains(@class,'input-select') and contains(@id,'search_input'))]//following::a[contains(@class,'select')]");
+		dropdown=By.xpath("//*[text()='" + strLabel + "']//ancestor::div[@type='choice']//following-sibling::div//select");
+		multiplevaluedropdown =By.xpath("//*[text()='" + strLabel + "']//following-sibling::div//select");
+		//button=By.xpath("//*[contains(@class,'section_header_content')]//descendant::button[text()='" + strLabel + "' and contains(@class,'btn') and not(contains(@class,'header'))]");
+		//button=By.xpath("//*[(contains(@class,'tab_section') and @aria-hidden='false') or contains(@class,'action_button') or contains(@class,'container') and contains(@class,'section_header_content') or contains(@class,'panel')]//descendant::button[text()='" + strLabel + "' and (not(contains(@class,'header')) and @type='submit' or contains(@class,'btn') and not(contains(@data-dismiss,'modal')))]");
+		//button=By.xpath("(//*[contains(@class,'navbar') and (@role='navigation' or @role='toolbar')]//descendant::*[local-name()='button' or local-name()='a'][text()='" + strLabel + "'])|(//*[text()='" + strLabel + "']//ancestor-or-self::a[not(contains(@class,'link'))])|(//*[(contains(@class,'tab_section') and @aria-hidden='false')]//descendant::button[contains(text(),'" + strLabel + "') and @type='submit'])|(//button[@id='" + strLabel + "' or text()='" + strLabel + "' and contains(@class,'activity')])");
+		//Comments: Button xpath changed for Comments POST Button
+		
+		
+		//button=By.xpath("(//*[contains(@class,'navbar') and (@role='navigation' or @role='toolbar' or contains(@class,'navbar'))]//descendant::*[local-name()='button' or local-name()='a'][text()='"+strLabel+"'])|(//*[text()='"+strLabel+"']//ancestor-or-self::a[not(contains(@class,'link'))])|(//button[@id='"+strLabel+"' or text()='"+strLabel+"' and contains(@class,'activity')])");
+		button=By.xpath("(//*[contains(@class,'navbar') and (@role='navigation' or @role='toolbar' or contains(@class,'navbar'))]//descendant::*[local-name()='button' or local-name()='a'][text()='"+strLabel+"'])|(//*[text()='"+strLabel+"']//ancestor-or-self::a[not(contains(@class,'link'))])|(//button[@id='"+strLabel+"' or text()='"+strLabel+"' and contains(@class,'activity')])|(//button[contains(text(),'"+strLabel+"')])|(.//*[@role='button' and contains(@aria-label,'"+strLabel+"')])|(.//*[@type='button' and contains(@aria-label,'"+strLabel+"')])");
+		
+		CommentsButton=By.xpath("//button[text()='"+strLabel+"'][1]");
+		TabButton=By.xpath("(//*[(contains(@class,'tab_section') and @aria-hidden='false')]//descendant::button[contains(text(),'"+strLabel+"') and @type='submit'])");
+		//TabButton=By.xpath("(//*[(contains(@class,'tab_section') and @aria-hidden='false')]//descendant::button[contains(text(),'"+strLabel+"') and @type='submit' or @type='button'])[1])");
+		//headerButton=By.xpath("//*[text()='" + strLabel + "']//ancestor-or-self::*[local-name()='a' or local-name()='button']");
+		checkbox=By.xpath("(//*[text()='" + strLabel + "']//ancestor-or-self::*[contains(@class,'form-group')]//descendant::input[@type='checkbox'])|(//*[contains(@data-original-title,'"+strLabel+"')]//ancestor-or-self::*[contains(@class,'check') and contains(@class,'item')]//descendant::input[@type='checkbox'][1])");
+		//menu=By.xpath("//*[text()='" + strLabel + "']//ancestor-or-self::*[contains(@class,'select') and @role='listbox']//descendant::li");
+		
+		menu=By.xpath("(//*[text()='" + strLabel + "']//ancestor-or-self::*[contains(@class,'select') and @role='listbox']//descendant::li)|(//*[text()='" + strLabel + "' and @role='menuitem'])|(//*[text()='" + strLabel + "']//ancestor-or-self::a[@role='menuitem'])|(//*[text()='" + strLabel + "']//ancestor-or-self::*[contains(@class,'select') and contains(@aria-label,'Choose option')])");
+		
+		tableLink=By.xpath(".//descendant::*[local-name()='th' or local-name()='td']["+ strLabel + "]//a");
+		tableLink2=By.xpath(".//descendant::*[local-name()='th' or local-name()='td']['" + strLabel + "']//preceding-sibling::td//a[contains(@class,'link')]");
+		readonlyTextbox=By.xpath("//*[text()='" + strLabel + "']//ancestor-or-self::*[contains(@id,'element')]//descendant::*[local-name()='input' or local-name()='select'][not(@type='hidden')][not(@onchange)]");
+		//readonlyFiled=By.xpath("//*[text()='" + strLabel + "' and contains(@class,'label')]//ancestor-or-self::*[contains(@id,'element')]//descendant::*[contains(@class,'input_controls')]//descendant::*[not(@type='hidden') and @readonly  or contains(@id,'readonly') or contains(@class,'disable')]");
+		readonlyFiled=By.xpath("//*[text()='" + strLabel + "' and contains(@class,'label')]//ancestor-or-self::*[contains(@id,'element')]//descendant::*[contains(@class,'input_controls')]//descendant::*[local-name()='input' or local-name()='select' or local-name()='textarea'][not(@type='hidden') and (@readonly  or contains(@id,'readonly') or contains(@class,'disabled'))]//option[@selected]");
+		comboLookup=By.xpath("//*[text()='" + strLabel + "']//ancestor-or-self::*[contains(@id,'element')]//descendant::button[contains(@id,'lookup')]");
+		dialogComboListItem=By.xpath("//*[contains(@id,'dialog') and @role='dialog']//descendant::*[text()='" + strLabel + "']//ancestor-or-self::*[contains(@class,'section') and contains(@id,'dialog')]//descendant::*[contains(@class,'list-item')]");
+		//select=By.xpath("//*[text()='" + strLabel + "']//ancestor-or-self::*[contains(@id,'element') or contains(@class,'select')]//descendant::select");
+		select=By.xpath("(//*[text()='" + strLabel + "']//ancestor-or-self::*[contains(@id,'element') or contains(@class,'select')]//descendant::select)|(//*[text()='" + strLabel + "']//parent::*[contains(@class,'col')]//descendant::select)|(//select[@aria-label='" + strLabel + "' and contains(@id,'select')])|(//*[text()='" + strLabel + "']//parent::div//select)");
+		unlockButton=By.xpath("//*[text()='" + strLabel + "']//ancestor-or-self::*[contains(@id,'element')]//descendant::button[contains(@id,'unlock')]");
+		//tab=By.xpath("//span[contains(@class,'tab') and contains(translate(text(),'\u00A0', ' '),'" + strLabel + "')]");
+		tab=By.xpath("(//*[contains(@class,'tab') and contains(translate(text(),'\u00A0', ' '),'" + strLabel + "')]//ancestor::*[@role='tab'])");
+		//tab=By.xpath("(//*[contains(@class,'tab') and contains(text(),'" + strLabel + "')]//ancestor::*[@role='tab'])");
+		//tab=By.xpath(".//div[@role='tablist']/span[@class='tab_header']/span[@role='tab']/span[contains(@class,'tab') and contains(text(),'" + strLabel + "')]");
+		//
+		mailframe=By.xpath("//iframe[@title='"+strLabel+"']");
+		mailTextbox=By.xpath("//*[@aria-label='"+strLabel+"' and contains(@class,'content')]");
+		link=By.xpath("(//*[text()='"+strLabel+"' and contains(@class,'link')]//ancestor-or-self::a)|(//*[text()='"+strLabel+"' and not(@role) or @title='"+strLabel+"']//ancestor-or-self::a)|(//a[text()='"+strLabel+"'])|(//b[text()='"+strLabel+"'])|(.//*[@data-original-title='"+strLabel+"']//parent::a)");
+		datePicker=By.xpath("//*[text()='"+strLabel+"']//ancestor-or-self::*[contains(@id,'element')]//following-sibling::div[contains(@class,'input')]//button[contains(@class,'date_time')]");
+		dialogTextbox=By.xpath("//*[normalize-space(text())='"+strLabel+"']//ancestor-or-self::*[contains(@id,'dialog') and @role='dialog' or contains(@class,'dialog')]//descendant::input[@type='text']");
+		expandView=By.xpath("//*[text()='"+strLabel+"']//ancestor-or-self::*[contains(@class,'tree')]//preceding-sibling::td//img[contains(@class,'tree')]");
+		SP_Button=By.xpath("//*[(text()='" + strLabel + "' or @value='" + strLabel + "' and @role='button')][1]//ancestor-or-self::*[local-name()='button' or local-name()='span' and contains(@class,'input')]");
+		SP_Textarea=By.xpath("//*[text()='"+strLabel+"']//ancestor-or-self::*[contains(@class,'label') or contains(@class,'panel-heading')]//following-sibling::*[contains(@class,'panel') or contains(@class,'scope')]//textarea[@role='textbox']");
+		translateSearchLink=By.xpath("//*[normalize-space(text())='"+strLabel+"']");
+		addRemoveButton=By.xpath("//a[contains(@aria-label,'"+strLabel+"') and @type='button']");
+		groupmenberTextbox=By.xpath("//*[text()='" + strLabel + "']//ancestor-or-self::*[@class='row']//following::input[not(@type='hidden') and @type='search']");
+		escportaltab=By.xpath("//a[text()='"+strLabel+"' and @role='tab']");
+		escPoratlBtn=By.xpath("//button[normalize-space(text())='"+strLabel+"' and @type='button']");
+		dropDownArrow = By.xpath("//label[text()='"+strLabel+"']//ancestor::div[contains(@class,'form-group')]//div//span[contains(@class,'arrow')]");
+		dropDownClick = By.xpath("//*[text()='"+strLabel+"']//parent::div//descendant::div//button[contains(@class,'dropdown')]");
+		dropDownSelectValue = By.xpath("//*[text()='"+strLabel+"']//parent::div[@role='option']");
+		linkIcon = By.xpath("//*[text()='"+strLabel+"']//ancestor::div[@class='iconlink']");
+		dialogTextArea = By.xpath("//label[text()='"+strLabel+"']//ancestor::div[contains(@class,'form-group')]//textarea");
+		dialogBtn = By.xpath("//*[text()='"+strLabel+"']//ancestor::div[contains(@class,'sparc-order-bottom') or contains(@class,'footer')]//parent::div[@role]");
+		linkText = By.xpath("//*[text()='"+strLabel+"']//parent::a");
+		search = By.xpath("//label[text()='"+strLabel+"']//ancestor::div[@class='row']//following-sibling::div[contains(@class,'row')]//descendant::input[@type='search']");
+		multiSelect = By.xpath("//label[text()='"+strLabel+"']//ancestor::div[@class='row']//following-sibling::div[contains(@class,'row')]//descendant::select[@aria-label='"+strLabel+"']");
+		lookupSearchBtn = By.xpath("//*[text()='"+strLabel+"']//ancestor::div[@type='reference']//following-sibling::div//button[contains(@id,'lookup')]");
+		notifyError = By.xpath("//*[text()='"+strLabel+"']//ancestor::div[contains(@id,'state')]//following-sibling::div[contains(@class,'notification-error')]");
+		dropdown= By.xpath("//*[text()='"+strLabel+"']//ancestor::div[contains(@class,'header')]//following-sibling::div[contains(@class,'container')]//a");
+		tableHeaderSearch = By.xpath("//*[text()='"+strLabel+"']//ancestor::div[@role='toolbar']//following-sibling::div//table[contains(@id,'table') or contains(@id,'report') and not(contains(@id,'clone'))]//thead//tr//td[3]//input");
+		readonlyDropdownValues = By.xpath("//*[text()='"+strLabel+"' and contains(@class,'label')]//ancestor-or-self::*[contains(@id,'element')]//descendant::*[contains(@class,'input_controls')]//descendant::*[local-name()='input' or local-name()='select' or local-name()='textarea'][not(@type='hidden') and (@readonly  or contains(@id,'readonly') or contains(@class,'disabled'))]//option");
+		partialLink  = By.xpath(".//div[contains(@class,'outputmsg')]//a[contains(text(),'"+strLabel+"')]");
+		cardRows = By.xpath("//*[contains(text(),'"+strLabel+"')]//ancestor::li//div[contains(@class,'card-component_first')]//following-sibling::div[contains(@class,'records')]//ul//li");
+		cardTableRows = By.xpath("//*[text()='"+strLabel+"']//ancestor::table[@class='table-wrapper']//following-sibling::table[@class='body_Class']//descendant::table[@align='left'][1]//tr");
+		cardDate = By.xpath("//*[contains(text(),'"+strLabel+"')]//ancestor::li//div[contains(@class,'card-component_first')]//span[contains(@class,'time')]//div[contains(@class,'date-calendar')]");
+		showEmailLink = By.xpath("//*[contains(text(),'"+strLabel+"')]//ancestor::li//div[contains(@class,'card-component_first')]//following-sibling::div[contains(@class,'records')]//ul//li//a[@show-label]");
+		hideEmailLink = By.xpath("//*[contains(text(),'"+strLabel+"')]//ancestor::li//div[contains(@class,'card-component_first')]//following-sibling::div[contains(@class,'records')]//ul//li//a[@action-type='hide-email']");
+		preFilledText = By.xpath("//*[text()='"+strLabel+"' and (contains(@class,'label-text') or contains(@class,'list_search_title '))]//ancestor-or-self::*[contains(@id,'element') or (contains(@id,'search'))]//descendant::div[contains(@class,'input') or @style]//p");
+		previewIcon = By.xpath("//*[text()='"+strLabel+"']//ancestor-or-self::*[contains(@id,'element')]//descendant::button[contains(@id,'viewr')]");
+		tablelinkText = By.xpath("//*[text()='"+strLabel+"']//ancestor::tr/td/a[not(@class='linked') and not(@role='button')]");
+		textContentBodyFrame = By.xpath("//iframe[@title='"+strLabel+"']");
+		textContentBody = By.xpath("//*[@aria-label='"+strLabel+"' and contains(@class,'content-body')]");
+		userComments = By.xpath("//span[text()='"+strLabel+"']//ancestor::li[contains(@class,'card_comments')]//div[contains(@class,'summary')]//span");
+		cardText = By.xpath("//*[text()='"+strLabel+"']//ancestor::table[@class='table-wrapper']//following-sibling::table[@class='body_Class']//descendant::table[@align='left'][1]//tr[9]//td");
+		tableText = By.xpath("//*[text()='"+strLabel+"']//parent::tr/td[5]");
+		navbarTitle = By.xpath("//*[text()='"+strLabel+"']//parent::a[@role='button']");
+		dropdownWithoutName = By.xpath("//*[text()='"+strLabel+"' and not(@value='closed_at')]//parent::select");
+		tabText = By.xpath(".//span[@class='tab_header']//span[contains(text(),'"+strLabel+"')]");
+		tabNavButton = By.xpath("//*[text()='"+strLabel+"']//ancestor::div[@class='navbar-header']//button[@type='submit']");
+		titleCard = By.xpath("//div[contains(@class,'rec-card')]//a//div[contains(@class,'title')][contains(text(),'"+strLabel+"')]");
+		calenderClick = By.xpath("//button[@aria-label='Show calendar']");
+		textBoxInput = By.xpath("//label[text()='"+strLabel+"']//parent::div//span//input[@type='text' or @type='string']");
+		dialogComboBox = By.xpath("//label[text()='"+strLabel+"']//parent::div//span//input[@role='combobox']");
+		getNumItem = By.xpath("//*[text()='"+strLabel+"']//ancestor::thead//following-sibling::tbody//tr//td[contains(@ng-if,'number')]//a[@title]");
+		navLink = By.xpath("//div[@role='navigation']//ul//li//a[text()='"+strLabel+"']");
+		attachmentLink = By.xpath("//a[contains(text(),'"+strLabel+"')]//ancestor::li//following-sibling::li//a[@class='content_editable']");
+		breadcrumbLink = By.xpath("//*[text()='"+strLabel+"']//parent::a");
+		tableAttachLink = By.xpath("//*[text()='"+strLabel+"']//ancestor::tr//td//a[@class='linked formlink']");
+		dialogCheckBox = By.xpath("//table[not(@class)]//td[text()='"+strLabel+"']//parent::tr//input[@type='checkbox']");
+		comboTextBox = By.xpath("//*[text()='"+strLabel+"' and (contains(@class,'label-text') or contains(@class,'list_search_title '))]//ancestor-or-self::*[contains(@id,'element') or (contains(@id,'search'))]//descendant::div[contains(@class,'input') or @style]//input[not(@type='hidden') and @role]");
+		
+	}
+
+	public Common(String strLabel1, String strLabel2) {
+		navigationbutton = By.xpath("//*[text()='" + strLabel1 + "']//ancestor-or-self::a[@role='button']"
+				+ "//ancestor::li//descendant::*[text()='" + strLabel2 + "']//ancestor-or-self::a");
+		combobox=By.xpath("//*[text()='"+strLabel1+"']//ancestor-or-self::*[contains(@class,'row') and contains(@class,'section')]//descendant::*[text()='"+strLabel2+"']//ancestor-or-self::*[contains(@class,'field-label')]//following-sibling::*[contains(@class,'field-input')]//a");
+		dialogButton=By.xpath("//*[normalize-space(text())='"+strLabel1+"']//ancestor::table//td/button[text()='"+strLabel2+"']");
+	
+		surveyChoice=By.xpath("//*[(contains(@class,'hidden'))]//descendant::*[contains(@id,'category')]//label[text()='"+strLabel1+"']//ancestor-or-self::*[contains(@class,'table')]//descendant::img[@alt='"+strLabel2+"']");
+		dropDownSelect = By.xpath("//*[text()='"+strLabel1+"']//parent::div//following::div//ul[@class='dropdown-menu']//li//a[text()='"+strLabel2+"']");
+		glideLookupSearch = By.xpath("//*[text()='"+strLabel1+"']//ancestor::div[@type='glide_list']//following-sibling::div//span[text()='"+strLabel2+"']//ancestor::button");
+		arrowBtn = By.xpath("//*[text()='"+strLabel1+"' and contains(@class,'label')]//ancestor-or-self::*[contains(@id,'element')]//descendant::*//img[@data-original-title='"+strLabel2+"']//ancestor::a[@id]");
+		imgIcon = By.xpath("//*[text()='"+strLabel1+"']//ancestor::div[@type='glide_list' or @type='reference']//following-sibling::div//*[@data-original-title='"+strLabel2+"']");
+		dialogRadioButton=By.xpath(".//label[contains(text(),'"+strLabel1+"')]//ancestor::table[@role='presentation']//span[@role='radio']//label[@class='radio-label' and text()='"+strLabel2+"']");
+		comments = By.xpath("//span[contains(text(),'"+strLabel1+"')]//ancestor::li[contains(@class,'card_comments')]//span[text()='"+strLabel2+"']//ancestor::ul[contains(@class,'list-table')]//li");	
+		tableHeaderSearch = By.xpath("//*[text()='"+strLabel1+"']//ancestor::div[@role='toolbar']//following-sibling::div//table[contains(@id,'table') or contains(@id,'report') and not(contains(@id,'clone'))]//thead//tr//td[@name='"+strLabel2+"']//input");
+	}
+
+	public Common(String strLabel1, String strLabel2, String strLabel3) {
+
+		navigationbutton = By.xpath("//*[text()='" + strLabel1
+				+ "']//ancestor-or-self::a[@role='button']//ancestor::li//descendant::*[text()='" + strLabel2 + "']"
+				+ "//ancestor-or-self::a//following-sibling::*[contains(@class,'list')]//descendant::*[text()='"
+				+ strLabel3 + "']//ancestor-or-self::a");
+		
+		checkbox=By.xpath("//*[normalize-space(text())='" + strLabel1 + "']//ancestor-or-self::*[contains(@class,'dialog')]"
+				+ "//descendant::*[text()='" + strLabel2 + "']//following::*[text()='" + strLabel3 + "']//preceding-sibling::input[@type='checkbox']");
+		
+	}
+
+	public static final By homePageValidation = By.xpath("(//*[text()='ServiceNow Home Page'])|(//*[@aria-label='Home page'])");
+	//public static final By tableHeader = By.xpath("//table[contains(@id,'table') and not(contains(@id,'clone'))]//thead/tr/th");
+	//public static final By tableHeader = By.xpath("//table[contains(@id,'table') or contains(@id,'report') and not(contains(@id,'clone'))]//thead/tr/th");
+	public static final By tableHeader = By.xpath("//div[@style='display: block;' and @aria-hidden='false']//table[contains(@id,'table') or contains(@id,'report') and not(contains(@id,'clone'))]//thead/tr/th[@role='columnheader']");
+	public static final By navigationTableHeader = By.xpath("//div[@style='display: block;']//table[contains(@id,'table') or contains(@id,'report') and not(contains(@id,'clone'))]//thead/tr/th[@role='columnheader']");
+	//public static final By tableRow = By.xpath("//table[contains(@id,'table') and not(contains(@id,'clone'))]//tbody/tr[contains(@class,'row')]");
+	public static final By tableRow = By.xpath("//table[contains(@id,'table') or contains(@id,'report') and not(contains(@id,'clone'))]//tbody/tr[contains(@class,'row') or @role='row' and not(@aria-hidden)]");
+	public static final By tableRowCMDB = By.xpath("//table[contains(@id,'table') or contains(@id,'report') and not(contains(@id,'clone'))]//tbody/tr[contains(@class,'row') and @record_class='u_configuration_task' or @role='row' and not(@aria-hidden)]");
+	public static final By tableHeader_1 = By.xpath("//table[contains(@id,'table') and not(contains(@id,'clone'))]//thead/tr/th");
+	public static final By tableHeader_2 = By.xpath("//table[contains(@id,'report') and not(contains(@id,'clone'))]//thead/tr/th");
+	public static final By nextPage=By.xpath("//*[contains(@class,'list_nav_bottom')]//button[contains(@name,'next') and not(contains(@class,'disabled'))]");
+	public static final By frame=By.xpath("//iframe[contains(@id,'main')]");
+	public static final By cardFrame = By.xpath("//iframe[@class='card']");
+	public static final By surveyFrame = By.xpath("//iframe[@id='survey_frame']");
+	//public static final By UserMenu=By.xpath("//*[contains(@class,'header-content')]//descendant::button[contains(@id,'dropdown') and @aria-label='User menu']");
+	public static final By UserMenu=By.xpath("//*[local-name()='button' or local-name()='a'][contains(@id,'dropdown') and @aria-label='User menu' or contains(@class,'dropdown') and @aria-label='User Profile']");
+	
+	//public static final By Usermenulist=By.xpath("//*[contains(@class,'header-content')]//descendant::*[contains(@class,'dropdown-menu') and @role='menu']//li");
+	public static final By Usermenulist=By.xpath("//*[contains(@class,'dropdown') and contains(@class,'open')]//descendant::ul[contains(@class,'dropdown-menu')]//descendant::li[not(@style)]");
+	
+	public static final By tooltipUserMenu=By.xpath("//*[contains(@class,'tooltip-inner')]");
+	public static final By searchTextbox=By.xpath("//*[contains(@class,'active')]//descendant::input[@role='combobox' and contains(@class,'input') and contains(@id,'search')]");
+	public static final By userMenuLabel=By.xpath("//*[@title='User menu' or @aria-label='User Profile' or @title='User options']//*[contains(@class,'user-name') or contains(@class,'visible')]");
+	public static final By tableCheckbox=By.xpath(".//td//span[contains(@class,'checkbox')]");
+	public static final By homePageLoadingIcon=By.xpath("//*[contains(@class,'loading icon')]");
+	public static final By comboboxUserMenu=By.xpath("//ul[contains(@class,'sub') or @role='listbox']//li[contains(@class,'select')]");
+	public static final By errorMessage=By.xpath("//*[contains(@class,'error') or @role='alert']//*[contains(@class,'notification') and not(contains(@class,'icon')) and not(contains(@class,'close')) or contains(@class,'output')]");
+	public static final By lookupItemList=By.xpath("//a[@role='button' and contains(@class,'item_link') or @role='treeitem']");
+	public static final By commentsList=By.xpath("//ul[contains(@class,'activities')]//li[contains(@class,'comments')]");
+	public static final By dateSelection=By.xpath("//table[@role='grid']//tr//td[contains(@class,'Date')]");
+	public static final By dateMonthOkButton=By.xpath("//button[contains(@id,'ok') and contains(@class,'icon')]");
+	public static final By monthPicker=By.xpath("//*[contains(@id,'DateTimePicker_month') and contains(@class,'Month') and  contains(@class,'Text')]");
+	public static final By DatePickerNextbutton=By.xpath("//*[contains(@id,'next') and @role='button']");
+	public static final By DatePickerPreviousbutton=By.xpath("//*[contains(@id,'prev') and @role='button']");
+	public static final By allAppsTab=By.xpath("//a[contains(@id,'allApps_tab')]");
+	public static final By filterNavigationButton=By.xpath("//*[@role='button' and contains(@class,'filter')]");
+	public static final By envelope=By.xpath("//*[contains(@class,'envelope')]");
+	public static final By mailItemList=By.xpath("//*[contains(@class,'list-item Emailed')]");
+	public static final By successMessage=By.xpath("//*[contains(@class,'alert-msg')]");
+	public static final By backButton=By.xpath("//*[text()='Back']//ancestor-or-self::button");
+	public static final By mailBody=By.xpath("//*[@role='tabpanel' and contains(@class,'active') and contains(@id,'content')]");
+	public static final By surveySucessMsg=By.xpath("//*[contains(@class,'description-text')]");
+	public static final By sparcPortTextbox=By.xpath("//*[(contains(@class,'hidden')) or (contains(@class,'search-bar'))]//descendant::input[@type='text' and @role='textbox']");
+	public static final By sparcPortSearchButton=By.xpath("//*[(contains(@class,'hidden')) or (contains(@class,'search-bar'))]//descendant::button[@name='search' or @title='Search']");
+	public static final By languageListItem=By.xpath("//ul[contains(@class,'dropdown-menu') and @role='menu']//descendant::li[@role='menuitem']");
+	public static final By articleContent=By.xpath("//*[contains(@class,'article-content')]//section");
+	public static final By kbTitleHeader=By.xpath("//*[contains(@class,'kb-title-header')]");
+	public static final By avaliLanguageLink=By.xpath("//a[contains(@aria-label,'language')]");
+	public static final By filterNavigation=By.xpath("//input[@id='filter' and @type='search']");
+	public static final By globalSearch=By.xpath("//input[contains(@aria-label,'Global Search') and @type='search']");
+	public static final By globalSearchButton=By.xpath("//form[contains(@aria-label,'Global Search') and @role='search']");
+	public static final By Usergrouptitle=By.xpath("//*[contains(@class,'navbar-title') and not(@draggable)]");
+	public static final By ActionButton=By.xpath("//button[@aria-label='action bar' and contains(@class,'btn')]");
+	public static final By tblLink=By.xpath(".//descendant::*[local-name()='th' or local-name()='td']//a[contains(@class,'formlink')]");
+	public static final By tblLinkupdated=By.xpath(".//descendant::*[local-name()='th' or local-name()='td']//a[contains(@class,'formlink') or @class='linked']");
+	public static final By tableLinkNew=By.xpath("//table[contains(@id,'table') or contains(@id,'report') and not(contains(@id,'clone'))]//tbody/tr[contains(@class,'row') or @role='row' and not(@aria-hidden)]//td/a[contains(@aria-label,'Approved')]");
+	public static final By dropDownSearch = By.xpath("//div[contains(@class,'drop-active') and contains(@style,'display: block;')]//input[@role='combobox']");
+	public static final By status = By.xpath("//div[@role='status']//span[@role='button']");
+	public static final By rightArrow = By.xpath("//a[@role='button' and @data-original-title='Add' or contains(@class,'select')]"); //modified for combo box search
+	public static final By downArrowIcon = By.xpath("//span[contains(@class,'arrow')]");
+	public static final By addBtn = By.xpath("//div[@class='button-column']//a[@role='button' and @data-original-title='Add']");
+	public static final By norecord = By.xpath("//table//tbody//tr[contains(@class,'records')]//td"); // modified with td on May 4th
+	public static final By activityText = By.xpath("//div[contains(text(),'Activities')]//parent::div[contains(@class,'control-label')]");
+	public static final By homePageLogo = By.xpath("(//*[text()='ServiceNow Home Page'])//parent::a[@class='navbar-brand']");
+	public static final By notificationLinkText = By.xpath("//div[@role='region']//div[contains(@class,'notification')]//a[@rel='nofollow']");
+	public static final By containerSearch = By.xpath("//input[@class='search-input']");
+	public static final By readonlyNumber = By.xpath("//div[@id='articleNumberReadonly']");  
+	public static final By alertMsg = By.xpath("//div[@role='alert']//span[@class='outputmsg_text']");
+	public static final By submitBtn = By.xpath("//button[@type='submit']");
+	public static final By errorLinkText = By.xpath("//*[@class='article']//a");
+	public static final By clickLink = By.xpath("//tr[1][contains(@class,'list_row')]//td[3]//a");
+	public static final By getNumText = By.xpath("//div[contains(@class,'text')]//b[@class]");
+	public static final By attachmentIcon = By.xpath("//button[contains(@id,'attachment')]");
+	public static final By choosefileBtn = By.xpath("//input[@value='Choose file'][@type='button']");
+	public static final By closeBtn = By.xpath("//span[text()='Close']//parent::button[contains(@id,'attachment') or contains(@id,'popup')]");
+	public static final By multiDropdown = By.xpath("//div[contains(@class,'drop-multi')]");
+	public static final By highlightedList = By.xpath("//div[@role='option']//parent::li[contains(@class,'highlighted')]");
+	public static final By tableBodyData = By.xpath("//table[@class='body_Class']//tr");
+	public static final By dialogPopup = By.xpath("//div[@role='dialog' and contains(@id,'popup')]//div[@class='modal-content']");
+	
+}
+
+		tab=By.xpath("(//*[contains(@class,'tab') and contains(translate(text(),'\u00A0', ' '),'" + strLabel + "')]//ancestor::*[@role='tab'])");
+		tab=By.xpath(".//div[@role='tablist']/span[@class='tab_header']/span[@role='tab']/span[contains(@class,'tab') and starts-with(text(),'"+strLabel+"')]"); //Modified by Savithri
+	
+		
+		dialogButton=By.xpath("//*[normalize-space(text())='"+strLabel1+"']//ancestor::table//td/button[text()='"+strLabel2+"']");
+		dialogButton=By.xpath("//*[normalize-space(text())='"+strLabel1+"']//ancestor-or-self::*[contains(@id,'dialog') and @role='dialog' or contains(@class,'dialog')]//descendant::button[text()='"+strLabel2+"']");
+		
+		public static final By UserMenu=By.xpath("//*[local-name()='button' or local-name()='a'][contains(@id,'dropdown') and @aria-label='User menu' or contains(@class,'dropdown') and @aria-label='User Profile']");
+		public static final By UserMenu = By.xpath("//*[local-name()='button' or local-name()='a' or local-name()='span'][contains(@id,'dropdown') and @aria-label='User menu' or contains(@class,'dropdown') and @aria-label='User Profile' or (@title='User options')]");

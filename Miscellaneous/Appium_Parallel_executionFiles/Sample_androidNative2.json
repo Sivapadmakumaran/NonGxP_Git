@@ -1,0 +1,28 @@
+{
+  "capabilities": [
+    {
+      "browserName": "AndroidTab",
+      "version": "4.4.4",
+      "maxInstances": 1,
+      "platform": "ANDROID",
+	  "appPackage": "com.experitest.ExperiBank",
+      "appActivity": "com.experitest.ExperiBank.LoginActivity"
+    }
+  ],
+  "configuration": {
+    "nodeTimeout": "120",
+    "port": "4727",
+    "hubPort": "4444",
+    "proxy": "org.openqa.grid.selenium.proxy.DefaultRemoteProxy",
+    "url": "http://10.219.161.150:4727/wd/hub",
+    "hub": "10.219.161.150:4444/grid/register",
+    "hubHost": "10.219.161.150",
+    "nodePolling": "2000",
+    "registerCycle": "10000",
+    "register": true,
+    "cleanUpCycle": "2000",
+    "timeout": "30000",
+    "maxSession": "1",
+    "session-override": "true"
+  }
+}

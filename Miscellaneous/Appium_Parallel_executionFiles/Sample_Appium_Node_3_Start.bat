@@ -1,0 +1,1 @@
+node "C:\Program Files\Appium\node_modules\appium\bin\appium.js" -a localhost -p 4728 -a 10.219.161.150 --nodeconfig "D:\Projects\CRAFT_Mobile_SVN\Source Code\CRAFT\Miscellaneous\Appium_Parallel_executionFiles\Sample_androidNative3.json" --udid ZX1D6489SC --bootstrap-port 2257 --session-override
